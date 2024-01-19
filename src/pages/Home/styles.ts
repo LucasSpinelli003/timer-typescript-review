@@ -52,6 +52,22 @@ export const SeparatorContainer = styled.div`
   justify-content: center;
 `
 
+const BaseInput = styled.input`
+  background: transparent;
+  height: 2.5rem;
+  border: 0;
+  border-bottom: 2px solid ${(props) => props.theme['gray-500']};
+  font-weight: bold;
+  font-size: 1.125rem;
+  padding: 0 0.5rem;
+`
+
+export const TaskInput = styled(BaseInput)``
+export const MinutesAmountInput = styled(BaseInput)`
+  width: 4rem;
+  align-items: center;
+`
+
 export const StartCountdownButton = styled.button`
   width: 100%;
   border: 0;
@@ -70,7 +86,12 @@ export const StartCountdownButton = styled.button`
   background-color: ${(props) => props.theme['green-500']};
   color: ${(props) => props.theme['gray-100']};
 
-  &:hover {
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  &:not(:disabled):hover {
     background: ${(props) => props.theme['green-700']};
   }
 `
