@@ -1,36 +1,35 @@
 import { createContext, useContext, useState } from 'react'
 
-const cycleContext = createContext({} as any)
+const CyclesContext = createContext({} as any)
 
 function NewCycleForm() {
-  const { activeCycle, setActiveCycle } = useContext(cycleContext)
-
+  const { activeCycle, setActiveCycle } = useContext(CyclesContext)
   function handleGoUp() {
     setActiveCycle((state: number) => state + 1)
     setActiveCycle((state: number) => state + 1)
   }
   return (
-    <h1>
-      NewCycleForm : {activeCycle}
-      <button onClick={handleGoUp}>aumentar</button>
-    </h1>
+    <>
+      <h1>NewCycleForm: {activeCycle}</h1>
+      <button onClick={handleGoUp}>Aumentar</button>
+    </>
   )
 }
-function Countdown() {
-  const { activeCycle } = useContext(cycleContext)
-  return <h1>Countdown:{activeCycle}</h1>
+function Countdownn() {
+  const { activeCycle } = useContext(CyclesContext)
+  return <h1>Countdown: {activeCycle}</h1>
 }
 
 export function Home() {
   const [activeCycle, setActiveCycle] = useState(0)
 
   return (
-    <cycleContext.Provider value={{ activeCycle, setActiveCycle }}>
-      <div>
+    <>
+      <CyclesContext.Provider value={{ setActiveCycle, activeCycle }}>
         <h1>Home</h1>
-        <Countdown />
         <NewCycleForm />
-      </div>
-    </cycleContext.Provider>
+        <Countdownn />
+      </CyclesContext.Provider>
+    </>
   )
 }
