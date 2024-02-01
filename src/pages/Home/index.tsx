@@ -4,30 +4,17 @@ import {
   StartCountdownButton,
   StopCountdownButton,
 } from './styles'
-import { useState, createContext } from 'react'
 import { NewCycleForm } from './components/NewCycleFomr'
 import { Countdown } from './components/Countdown'
 import { FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as zod from 'zod'
-
-interface Cycle {
-  id: string
-  task: string
-  minutesAmount: number
-  startDate: Date
-  interruptedDate?: Date
-  finishedDate?: Date
-}
-
-
+import { useContext } from 'react'
+import { CyclesContext } from '../../context/CyclesContext'
 
 export function Home() {
-  const [cycles, setCycles] = useState<Cycle[]>([])
-  const [activeCycleId, setActiveCycleId] = useState<string | null>(null)
-
-  const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId)
-  const [amountPassedSeconds, setAmountPassedSeconds] = useState(0)
+  const { activeCycle, createNewCycle, handleInterruptCycle } =
+    useContext(CyclesContext)
 
   const newCycleFormValidationSchema = zod.object({
     task: zod.string().min(1, 'Informe a tarefa'),
@@ -49,52 +36,10 @@ export function Home() {
 
   const { handleSubmit, watch, reset } = newCycleForm
 
-  function secondsPassed(value: number) {
-    setAmountPassedSeconds(value)
-  }
-
-  function markCurrentCycleAsFineshed() {
-    setCycles((state) =>
-      state.map((cycle) => {
-        if (cycle.id === activeCycleId) {
-          return { ...cycle, finishedDate: new Date() }
-        } else {
-          return cycle
-        }
-      }),
-    )
-  }
-
   function handleCreateNewCycle(data: NewCycleFormData) {
-    const id = String(new Date().getTime())
-
-    const newCycle: Cycle = {
-      id,
-      task: data.task,
-      minutesAmount: data.minutesAmount,
-      startDate: new Date(),
-    }
-
-    setCycles((state) => [...state, newCycle])
-    setActiveCycleId(newCycle.id)
-    setAmountPassedSeconds(0)
-
+    createNewCycle(data)
     reset()
   }
-
-  function handleInterruptCycle() {
-    setCycles((state) =>
-      state.map((cycle) => {
-        if (cycle.id === activeCycleId) {
-          return { ...cycle, interruptedDate: new Date() }
-        } else {
-          return cycle
-        }
-      }),
-    )
-    setActiveCycleId(null)
-  }
-
   const task = watch('task')
   const minutesAmountInput = watch('minutesAmount')
 
